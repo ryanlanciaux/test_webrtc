@@ -11,8 +11,8 @@ This is currently a test app - not great code, etc. There are some errors being 
 `npm start` || `yarn start`
 
 1. Open two browsers to localhost:3000 (or whatever port your run the react app on -- default is 3000)
-1. Set one browser to be the host - clicking host will send a socket message to obtain a key for client to use to connect
-1. Enter the key in the client to connect to the host
+1. Set one browser host by navigating to the `/` route
+1. Set one browser to be the client to connect by navigating to `/join`. You will need to input the key from the host and press Go.
 1. Once connected, you should have the ability to send a random string to the peer connection
 
 ## references
