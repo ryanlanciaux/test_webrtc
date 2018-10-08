@@ -1,8 +1,6 @@
-import React, { Component, Fragment } from "react";
-import "./App.css";
-import { error } from "util";
+import { Component } from "react";
 
-const SOCKET_ADDRESS = "ws://127.0.0.1:8088";
+import { error } from "util";
 
 const messagesTypes = {
   CANDIDATE: "CANDIDATE",
@@ -14,7 +12,7 @@ const messagesTypes = {
 
 const rtcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 
-class ConnectionEstablishizer extends Component {
+export default class ConnectionBroker extends Component {
   state = {
     isSocketConnectionEstablished: false,
     accessCode: null,
@@ -34,6 +32,7 @@ class ConnectionEstablishizer extends Component {
     this.peer = null;
 
     this.onIceCandidate = this.onIceCandidate.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
@@ -206,14 +205,13 @@ class ConnectionEstablishizer extends Component {
     });
   };
 
-  sendMessage = message => {
+  sendMessage(message) {
     if (typeof message !== "object") {
       throw new Error("Must send an object from sendMessage!");
     }
 
-    console.log("SENDING MESSAGE FROM", this.name);
     this.webSocket.send(JSON.stringify({ ...message, socketName: this.name }));
-  };
+  }
 
   sendChannelMessage = message => {
     this.dataChannel.send(message);
@@ -242,84 +240,3 @@ class ConnectionEstablishizer extends Component {
     });
   }
 }
-
-function getRandomStuff() {
-  return Math.random()
-    .toString(36)
-    .substring(2, 10)
-    .toUpperCase();
-}
-
-class SendMessage extends Component {
-  state = { isHost: false, isClient: false };
-
-  render() {
-    const {
-      isSocketConnectionEstablished,
-      sendSocketMessage,
-      accessCode,
-      hasDataChannel,
-      sendDataChannelMessage,
-      latestMessage
-    } = this.props;
-
-    const { isHost, isClient } = this.state;
-
-    if (hasDataChannel) {
-      return (
-        <Fragment>
-          Click to send random stuff over data channel.
-          <button onClick={() => sendDataChannelMessage(getRandomStuff())}>
-            Click to send random stuff.
-          </button>
-          <h5>Latest received message</h5>
-          {latestMessage}
-        </Fragment>
-      );
-    }
-
-    if (isClient) {
-      return (
-        <Fragment>
-          <input type="text" ref={el => (this.element = el)} />
-          <button
-            onClick={() => {
-              sendSocketMessage({ type: "CLIENT", code: this.element.value });
-            }}
-          >
-            GO!
-          </button>
-        </Fragment>
-      );
-    }
-
-    if (accessCode) {
-      return <h1>{accessCode}</h1>;
-    }
-
-    return isSocketConnectionEstablished ? (
-      <Fragment>
-        <button onClick={() => sendSocketMessage({ type: "HOST" })}>
-          Host
-        </button>
-        <button onClick={() => this.setState({ isClient: true })}>
-          client
-        </button>
-      </Fragment>
-    ) : (
-      <h1>Loading</h1>
-    );
-  }
-}
-
-class App extends Component {
-  render() {
-    return (
-      <ConnectionEstablishizer socketAddress={SOCKET_ADDRESS}>
-        {props => <SendMessage {...props} />}
-      </ConnectionEstablishizer>
-    );
-  }
-}
-
-export default App;
