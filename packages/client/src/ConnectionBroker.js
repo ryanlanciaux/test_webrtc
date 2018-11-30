@@ -12,6 +12,14 @@ const messagesTypes = {
 
 const rtcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 
+function getRTCPeerConnectionClass() {
+  if (window.webkitRTCPeerConnection) {
+    return window.webkitRTCPeerConnection;
+  }
+
+  return RTCPeerConnection;
+}
+
 export default class ConnectionBroker extends Component {
   state = {
     isSocketConnectionEstablished: false,
@@ -47,7 +55,7 @@ export default class ConnectionBroker extends Component {
       socket.onerror = this.onSocketError;
     };
 
-    const RTCPeerConnectionClass = webkitRTCPeerConnection || RTCPeerConnection; //eslint-disable-line
+    const RTCPeerConnectionClass = getRTCPeerConnectionClass();
     this.peer = new RTCPeerConnectionClass(rtcConfig, this.rtcConnection);
     this.peer.onicecandidate = this.onIceCandidate;
 
