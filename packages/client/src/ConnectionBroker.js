@@ -48,7 +48,7 @@ export default class ConnectionBroker extends Component {
     };
 
     const RTCPeerConnectionClass = webkitRTCPeerConnection || RTCPeerConnection; //eslint-disable-line
-    this.peer = new RTCPeerConnection(rtcConfig, this.rtcConnection);
+    this.peer = new RTCPeerConnectionClass(rtcConfig, this.rtcConnection);
     this.peer.onicecandidate = this.onIceCandidate;
 
     this.dataChannel = this.peer.createDataChannel("datachannel", {
