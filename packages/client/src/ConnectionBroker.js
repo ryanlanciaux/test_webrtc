@@ -1,6 +1,7 @@
 import { Component } from "react";
 
 import { error } from "util";
+require("webrtc-adapter");
 
 const messagesTypes = {
   CANDIDATE: "CANDIDATE",
@@ -11,14 +12,6 @@ const messagesTypes = {
 };
 
 const rtcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
-
-function getRTCPeerConnectionClass() {
-  if (window.webkitRTCPeerConnection) {
-    return window.webkitRTCPeerConnection;
-  }
-
-  return RTCPeerConnection;
-}
 
 export default class ConnectionBroker extends Component {
   state = {
@@ -55,8 +48,7 @@ export default class ConnectionBroker extends Component {
       socket.onerror = this.onSocketError;
     };
 
-    const RTCPeerConnectionClass = getRTCPeerConnectionClass();
-    this.peer = new RTCPeerConnectionClass(rtcConfig, this.rtcConnection);
+    this.peer = new RTCPeerConnection(rtcConfig, this.rtcConnection);
     this.peer.onicecandidate = this.onIceCandidate;
 
     this.dataChannel = this.peer.createDataChannel("datachannel", {
