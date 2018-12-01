@@ -16,6 +16,35 @@ const Router = () => (
         exact
         path="/"
         render={props => (
+          <div>
+            <div
+              style={{
+                margin: 20,
+                padding: 20,
+                backgroundColor: "#EDEDED",
+                borderRadius: 15
+              }}
+            >
+              <Link to="/Host">HOST</Link>
+            </div>
+            <div
+              style={{
+                margin: 20,
+                padding: 20,
+                backgroundColor: "#EDEDED",
+                borderRadius: 15
+              }}
+            >
+              <Link to="/join">JOIN</Link>
+            </div>
+            <div style={{ margin: 20, padding: 20 }}>Version 0.11</div>
+          </div>
+        )}
+      />
+      <Route
+        exact
+        path="/host"
+        render={props => (
           <ConnectionBroker socketAddress={SOCKET_ADDRESS}>
             {connectionProps => <Host {...connectionProps} />}
           </ConnectionBroker>
