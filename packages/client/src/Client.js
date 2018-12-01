@@ -36,14 +36,15 @@ export default class extends Component {
     }
 
     return (
-      <Fragment>
+      <div style={{ margin: 100 }}>
         <input
           type="text"
           ref={el => (this.element = el)}
           onKeyPress={this.handleKeyPress}
+          placeholder="Enter keycode"
         />
         <button onClick={this.startEstablishingConnection}>GO!</button>
-      </Fragment>
+      </div>
     );
   }
 }

@@ -64,6 +64,11 @@ export default class Host extends Component {
       );
     }
 
-    return <h1>{accessCode ? accessCode : "Loading"}</h1>;
+    return (
+      <div style={{ margin: 100 }}>
+        <h1>{accessCode ? accessCode : "Loading"}</h1>
+        <div style={{ marginTop: 30 }}>Version 0.10</div>
+      </div>
+    );
   }
 }
