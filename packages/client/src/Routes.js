@@ -9,6 +9,19 @@ import Client from "./Client";
 
 const SOCKET_ADDRESS = "ws://127.0.0.1:8088";
 
+function hasRTCPeer() {
+  let hasRTCPeer = false;
+  try {
+    const o = new (window.RTCPeerConnection ||
+      window.msRTCPeerConnection ||
+      window.mozRTCPeerConnection ||
+      window.webkitRTCPeerConnection)(null);
+    hasRTCPeer = "createDataChannel" in o;
+  } catch (e) {}
+
+  return hasRTCPeer;
+}
+
 const Router = () => (
   <BrowserRouter>
     <div>
@@ -37,7 +50,14 @@ const Router = () => (
             >
               <Link to="/join">JOIN</Link>
             </div>
-            <div style={{ margin: 20, padding: 20 }}>Version 0.11</div>
+            <div style={{ margin: 20, padding: 20 }}>
+              {hasRTCPeer() ? (
+                <span>Should have RTC connection</span>
+              ) : (
+                <span>RTC is not working</span>
+              )}
+            </div>
+            <div style={{ margin: 20, padding: 20 }}>Version 0.12</div>
           </div>
         )}
       />
