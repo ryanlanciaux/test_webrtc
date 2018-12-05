@@ -50,7 +50,7 @@ export default class ConnectionBroker extends Component {
     this.peer = new (window.webkitRTCPeerConnection ||
       window.msRTCPeerConnection ||
       window.mozRTCPeerConnection ||
-      window.RTCPeerConnection)(null);
+      window.RTCPeerConnection)(rtcConfig, this.rtcConnection);
 
     this.peer.onicecandidate = this.onIceCandidate;
 
