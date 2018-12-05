@@ -7,7 +7,7 @@ import DataChannelSender from "./DataChannelSender";
 
 const MAX_ATTEMPTS = 5;
 export default class Host extends Component {
-  state = { isHost: false, isClient: false };
+  state = { isHost: false, isClient: false, messages: [] };
   connectionAttempts = 0;
 
   componentDidMount() {
@@ -47,7 +47,7 @@ export default class Host extends Component {
       accessCode,
       hasDataChannel,
       sendDataChannelMessage,
-      latestMessage
+      subscribe
     } = this.props;
 
     console.log("HOST", this.props);
@@ -59,7 +59,7 @@ export default class Host extends Component {
       return (
         <DataChannelSender
           onClick={() => sendDataChannelMessage(getRandomStuff())}
-          latestMessage={latestMessage}
+          subscribe={subscribe}
         />
       );
     }

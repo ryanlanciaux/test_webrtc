@@ -20,17 +20,13 @@ export default class extends Component {
   };
 
   render() {
-    const {
-      hasDataChannel,
-      sendDataChannelMessage,
-      latestMessage
-    } = this.props;
+    const { hasDataChannel, sendDataChannelMessage, subscribe } = this.props;
 
     if (hasDataChannel) {
       return (
         <DataChannelSender
           onClick={() => sendDataChannelMessage(getRandomStuff())}
-          latestMessage={latestMessage}
+          subscribe={subscribe}
         />
       );
     }

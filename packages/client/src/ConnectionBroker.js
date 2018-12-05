@@ -1,4 +1,5 @@
 import { Component } from "react";
+import cuid from "cuid";
 
 import { error } from "util";
 require("webrtc-adapter");
@@ -11,7 +12,20 @@ const messagesTypes = {
   HOST_CONNECTION_INFO: "HOST_CONNECTION_INFO"
 };
 
+export const subscriberMessageTypes = {
+  ON_DATACHANNEL_OPEN: "ON_DATACHANNEL_OPEN",
+  ON_DATACHANNEL_CLOSE: "ON_DATACHANNEL_CLOSE",
+  ON_DATACHANNEL_ERROR: "ON_DATACHANNEL_ERROR",
+  ON_PEER_DATACHANNEL_OPEN: "ON_PEER_DATACHANNEL_OPEN",
+  ON_DATACHANNEL_MESSAGE: "ON_DATACHANNEL_MESSAGE"
+};
+
 const rtcConfig = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+
+function addSubscriberToObject(subscriber, subscriberObject) {
+  const id = cuid();
+  return { ...subscriberObject, [id]: subscriber };
+}
 
 export default class ConnectionBroker extends Component {
   state = {
@@ -21,7 +35,7 @@ export default class ConnectionBroker extends Component {
     latestMessage: null
   };
 
-  constructor() {
+  constructor(props) {
     super();
 
     // name provided by server
@@ -34,7 +48,31 @@ export default class ConnectionBroker extends Component {
 
     this.onIceCandidate = this.onIceCandidate.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+
+    let subscribers = {};
+
+    if (props.subscribers) {
+      props.subscribers.forEach(subscriber => {
+        addSubscriberToObject(subscriber, subscribers);
+      });
+    }
+
+    this.subscribers = subscribers;
   }
+
+  addSubscriber = subscriber => {
+    this.subscribers = addSubscriberToObject(subscriber, {});
+  };
+
+  removeSubscriber = id => {
+    delete this.subscribers[id];
+  };
+
+  sendMessageToSubscribers = (type, message) => {
+    Object.keys(this.subscribers).forEach(key => {
+      this.subscribers[key]({ type, message });
+    });
+  };
 
   componentDidMount() {
     const socket = new WebSocket(this.props.socketAddress);
@@ -71,29 +109,33 @@ export default class ConnectionBroker extends Component {
   }
 
   onDataChannelOpen = () => {
-    console.log("data channel opened");
+    this.sendMessageToSubscribers(subscriberMessageTypes.ON_DATACHANNEL_OPEN);
   };
 
   onDataChannelClose = () => {
-    console.log("data channel closed");
+    this.sendMessageToSubscribers(subscriberMessageTypes.ON_DATACHANNEL_CLOSE);
   };
 
   onDataChannelError = () => {
-    console.log("data channel error");
+    this.sendMessageToSubscribers(subscriberMessageTypes.ON_DATACHANNEL_ERROR);
   };
 
   onPeerDataChannel = channelEvent => {
     channelEvent.channel.onopen = () => {
-      console.log("Data channel opened");
+      this.sendMessageToSubscribers(
+        subscriberMessageTypes.ON_PEER_DATACHANNEL_OPEN
+      );
     };
 
     channelEvent.channel.onmessage = this.onChannelMessage;
     this.setState({ hasDataChannel: true });
   };
 
-  onChannelMessage = ({ data }) => {
-    console.log("Received data on channel", data);
-    this.setState({ latestMessage: data });
+  onChannelMessage = message => {
+    this.sendMessageToSubscribers(
+      subscriberMessageTypes.ON_DATACHANNEL_MESSAGE,
+      message
+    );
   };
 
   onIceCandidate(e) {
@@ -102,11 +144,11 @@ export default class ConnectionBroker extends Component {
   }
 
   onSocketClose = () => {
-    // do something to handle the closing of the socket
+    this.props.onSocketClose && this.props.onSocketClose();
   };
 
   onSocketError = () => {
-    console.log("Error occurred");
+    this.props.onSocketError && this.props.onSocketError();
   };
 
   establishConnection = async () => {
@@ -127,7 +169,6 @@ export default class ConnectionBroker extends Component {
   onSocketMessage = async messageEvent => {
     var message = JSON.parse(messageEvent.data);
 
-    console.log(message);
     if (!message.type && !message.clientName) {
       throw new Error("Not an expected message");
     }
@@ -138,7 +179,7 @@ export default class ConnectionBroker extends Component {
     }
 
     // This is a bit more stateful / mutatey than I would like as an end result
-    // refactorrrrrrr
+    // TODO: refactorrrrrrr
     if (message.from && !this.remoteName) {
       this.remoteName = message.from;
     }
@@ -212,7 +253,7 @@ export default class ConnectionBroker extends Component {
 
   sendMessage(message) {
     if (typeof message !== "object") {
-      throw new Error("Must send an object from sendMessage!");
+      throw new error("Must send an object from sendMessage!");
     }
 
     this.webSocket.send(JSON.stringify({ ...message, socketName: this.name }));
@@ -220,10 +261,6 @@ export default class ConnectionBroker extends Component {
 
   sendChannelMessage = message => {
     this.dataChannel.send(message);
-  };
-
-  onClick = () => {
-    this.sendMessage({ id: "12345" });
   };
 
   render() {
@@ -241,7 +278,9 @@ export default class ConnectionBroker extends Component {
       sendDataChannelMessage: this.sendChannelMessage,
       accessCode: accessCode,
       hasDataChannel: hasDataChannel,
-      latestMessage
+      latestMessage,
+      subscribe: this.addSubscriber,
+      removeSubscriber: this.removeSubscriber
     });
   }
 }
