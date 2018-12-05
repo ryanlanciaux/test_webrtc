@@ -50,6 +50,7 @@ export default class Host extends Component {
       latestMessage
     } = this.props;
 
+    console.log("HOST", this.props);
     if (!isSocketConnectionEstablished) {
       return null;
     }
@@ -66,6 +67,7 @@ export default class Host extends Component {
     return (
       <div style={{ margin: 100 }}>
         <h1>{accessCode ? accessCode : "Loading"}</h1>
+        <div style={{ marginTop: 30 }}>Version 0.10</div>
       </div>
     );
   }

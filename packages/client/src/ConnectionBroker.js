@@ -1,6 +1,7 @@
 import { Component } from "react";
 
 import { error } from "util";
+require("webrtc-adapter");
 
 const messagesTypes = {
   CANDIDATE: "CANDIDATE",
