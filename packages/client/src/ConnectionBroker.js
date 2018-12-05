@@ -47,10 +47,10 @@ export default class ConnectionBroker extends Component {
       socket.onerror = this.onSocketError;
     };
 
-    this.peer = new (window.webkitRTCPeerConnection ||
+    this.peer = new (window.RTCPeerConnection ||
       window.msRTCPeerConnection ||
       window.mozRTCPeerConnection ||
-      window.RTCPeerConnection)(rtcConfig, this.rtcConnection);
+      window.webkitRTCPeerConnection)(rtcConfig, this.rtcConnection);
 
     this.peer.onicecandidate = this.onIceCandidate;
 
