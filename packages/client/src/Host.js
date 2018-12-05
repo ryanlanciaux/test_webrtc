@@ -64,14 +64,8 @@ export default class Host extends Component {
     }
 
     return (
-      <div
-        style={{
-          backgroundColor: "#EDEDED",
-          padding: 20,
-          margin: 60
-        }}
-      >
-        <h1 style={{ fontSize: 40 }}>{accessCode ? accessCode : "Loading"}</h1>
+      <div style={{ margin: 100 }}>
+        <h1>{accessCode ? accessCode : "Loading"}</h1>
       </div>
     );
   }
