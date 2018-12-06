@@ -52,6 +52,13 @@ cookie@0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
+correspond-signaling@^1.0.1-alpha:
+  version "1.0.1-alpha"
+  resolved "https://registry.yarnpkg.com/correspond-signaling/-/correspond-signaling-1.0.1-alpha.tgz#c29cbcfcaf6aef3470bc69ae107160b74a15c65b"
+  dependencies:
+    cuid "^2.1.4"
+    ws "^6.1.2"
+
 cuid@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/cuid/-/cuid-2.1.4.tgz#e1178eb92a05ef9364b29a9942feed36d3604cdd"
@@ -316,5 +323,11 @@ vary@~1.1.2:
 ws@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/ws/-/ws-6.0.0.tgz#eaa494aded00ac4289d455bac8d84c7c651cef35"
+  dependencies:
+    async-limiter "~1.0.0"
+
+ws@^6.1.2:
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-6.1.2.tgz#3cc7462e98792f0ac679424148903ded3b9c3ad8"
   dependencies:
     async-limiter "~1.0.0"
