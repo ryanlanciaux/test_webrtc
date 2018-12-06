@@ -6,7 +6,9 @@ import DataChannelSender from "./DataChannelSender";
 import { getRandomStuff } from "./utils";
 import { CLIENT } from "./constants";
 
-export default class extends Component {
+import { Client as ClientWrapper } from "correspond";
+
+class Client extends Component {
   handleKeyPress = e => {
     if (e.key === "Enter") {
       this.startEstablishingConnection();
@@ -14,18 +16,16 @@ export default class extends Component {
   };
 
   startEstablishingConnection = () => {
-    console.log(CLIENT, this.element.value);
-    const { sendSocketMessage } = this.props;
-    sendSocketMessage({ type: CLIENT, code: this.element.value });
+    this.props.establishConnectionWithKey(this.element.value);
   };
 
   render() {
-    const { hasDataChannel, sendDataChannelMessage, subscribe } = this.props;
+    const { hasDataChannel, sendMessage, subscribe } = this.props;
 
     if (hasDataChannel) {
       return (
         <DataChannelSender
-          onClick={() => sendDataChannelMessage(getRandomStuff())}
+          onClick={() => sendMessage(getRandomStuff())}
           subscribe={subscribe}
         />
       );
@@ -44,3 +44,23 @@ export default class extends Component {
     );
   }
 }
+
+const ClientSync = props => (
+  <ClientWrapper {...props}>
+    {({
+      hasDataChannel,
+      sendMessage,
+      subscribe,
+      establishConnectionWithKey
+    }) => (
+      <Client
+        hasDataChannel={hasDataChannel}
+        sendMessage={sendMessage}
+        subscribe={subscribe}
+        establishConnectionWithKey={establishConnectionWithKey}
+      />
+    )}
+  </ClientWrapper>
+);
+
+export default ClientSync;

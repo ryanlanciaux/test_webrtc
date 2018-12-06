@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "correspond": "^1.0.3-alpha",
+    "correspond": "^1.0.6-alpha",
     "cuid": "^2.1.4",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
@@ -27,5 +27,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.2.1"
+  }
 }
