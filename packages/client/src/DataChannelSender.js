@@ -1,7 +1,5 @@
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { subscriberMessageTypes } from "./ConnectionBroker";
+import { subscriberMessageTypes } from "correspond";
 
 class DataChannelSender extends React.Component {
   state = { messages: [] };

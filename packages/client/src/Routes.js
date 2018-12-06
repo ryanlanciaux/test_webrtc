@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { Correspondent } from "correspond";
 
 import { BrowserRouter, Route, Link } from "react-router-dom";
-import ConnectionBroker from "./ConnectionBroker";
 import Host from "./Host";
 import Client from "./Client";
 
@@ -45,18 +45,18 @@ const Router = () => (
         exact
         path="/host"
         render={props => (
-          <ConnectionBroker socketAddress={SOCKET_ADDRESS}>
+          <Correspondent socketAddress={SOCKET_ADDRESS}>
             {connectionProps => <Host {...connectionProps} />}
-          </ConnectionBroker>
+          </Correspondent>
         )}
       />
       <Route
         exact
         path="/join"
         render={props => (
-          <ConnectionBroker socketAddress={SOCKET_ADDRESS}>
+          <Correspondent socketAddress={SOCKET_ADDRESS}>
             {connectionProps => <Client {...connectionProps} />}
-          </ConnectionBroker>
+          </Correspondent>
         )}
       />
     </div>

@@ -2112,6 +2112,14 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+correspond@^1.0.3-alpha:
+  version "1.0.3-alpha"
+  resolved "https://registry.yarnpkg.com/correspond/-/correspond-1.0.3-alpha.tgz#1c25a5499fb71075f1cf0dd03028446929b66644"
+  dependencies:
+    cuid "^2.1.4"
+    react "^16.6.3"
+    webrtc-adapter "^6.4.8"
+
 cosmiconfig@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-4.0.0.tgz#760391549580bbd2df1e562bc177b13c290972dc"
@@ -6866,7 +6874,7 @@ react-scripts@2.0.4:
   optionalDependencies:
     fsevents "1.2.4"
 
-react@^16.5.2:
+react@^16.5.2, react@^16.6.3:
   version "16.6.3"
   resolved "https://registry.yarnpkg.com/react/-/react-16.6.3.tgz#25d77c91911d6bbdd23db41e70fb094cc1e0871c"
   dependencies:
